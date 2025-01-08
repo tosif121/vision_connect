@@ -4,6 +4,8 @@ import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from './theme-provider';
 import { Toaster } from 'react-hot-toast';
+import Navbar from './components/Nav';
+import Footer from './components/Footer';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -16,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Your App Name',
-  description: 'Your app description',
+  title: 'Vision Connect',
+  description: 'Vision Connect',
 };
 
 export default function RootLayout({
@@ -30,8 +32,13 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <main className="min-h-screen">{children}</main>
-            <Toaster />
+            <main className="flex flex-col min-h-screen">
+              <Navbar />
+              <div className="flex-grow">{children}</div>
+              <Footer />
+            </main>
+
+            <Toaster position="top-right" reverseOrder={false} />
           </ThemeProvider>
         </body>
       </html>

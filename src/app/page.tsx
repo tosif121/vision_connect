@@ -1,13 +1,15 @@
+'use client';
+import DeveloperProfile from './components/DeveloperProfile';
 import Hero from './components/Hero';
-import Navbar from './components/Nav';
 import ProjectsList from './components/ProjectsList';
 
 export default function Home() {
+  const userType = localStorage.getItem('userType');
+
   return (
     <>
-      <Navbar />
       <Hero />
-      <ProjectsList />
+      {(userType !== 'founder' && <ProjectsList />) || <DeveloperProfile />}
     </>
   );
 }

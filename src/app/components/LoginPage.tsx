@@ -2,14 +2,15 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Github } from 'lucide-react';
+import { Github, Loader } from 'lucide-react';
 import { useAuth, useSignIn } from '@clerk/nextjs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const [role, setRole] = useState('');
-  const { signIn, isLoading } = useSignIn();
+  const [isLoading, setIsLoading] = useState(false);
+  const { signIn } = useSignIn();
   const { userId } = useAuth();
   const router = useRouter();
 
@@ -20,12 +21,22 @@ export default function LoginPage() {
   }, [userId, router]);
 
   const handleSocialLogin = async (provider: 'oauth_github' | 'oauth_google') => {
+    setIsLoading(true);
+
     if (!signIn) {
       console.error('signIn object is not available.');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!role) {
+      alert('Please select a role before signing in.');
+      setIsLoading(false);
       return;
     }
 
     try {
+      localStorage.setItem('userType', role);
       await signIn.authenticateWithRedirect({
         strategy: provider,
         redirectUrl: '/sso-callback',
@@ -34,6 +45,8 @@ export default function LoginPage() {
     } catch (error: any) {
       console.error('Authentication error:', error);
       alert(error?.long_message || 'Authentication failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -46,7 +59,7 @@ export default function LoginPage() {
               <Image width={32} height={32} src="/images/logo.png" alt="Logo" className="dark:invert" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-center">Welcome Back</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">Welcome</CardTitle>
           <CardDescription className="text-center">Choose your role to continue</CardDescription>
         </CardHeader>
         <CardContent>
@@ -109,8 +122,8 @@ export default function LoginPage() {
                       onClick={() => handleSocialLogin('oauth_github')}
                       disabled={isLoading}
                     >
-                      <Github className="w-5 h-5" />
-                      Continue with GitHub
+                      {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <Github className="w-5 h-5" />}
+                      {isLoading ? 'Processing...' : 'Continue with GitHub'}
                     </Button>
                   ) : (
                     <Button
@@ -119,8 +132,12 @@ export default function LoginPage() {
                       onClick={() => handleSocialLogin('oauth_google')}
                       disabled={isLoading}
                     >
-                      <Image width={20} height={20} src="/images/google.svg" alt="google" />
-                      Continue with Google
+                      {isLoading ? (
+                        <Loader className="w-5 h-5 animate-spin" />
+                      ) : (
+                        <Image width={20} height={20} src="/images/google.svg" alt="google" />
+                      )}
+                      {isLoading ? 'Processing...' : 'Continue with Google'}
                     </Button>
                   )}
                 </div>
