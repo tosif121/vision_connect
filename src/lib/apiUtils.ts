@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.API_URL || 'http://localhost:7012/api';
-
+const API_BASE_URL = process.env.API_URL || 'https://vision-connect-backend.vercel.app/api';
+console.log(API_BASE_URL)
 export const createProject = async (formData: any) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/create-projects`, formData);
