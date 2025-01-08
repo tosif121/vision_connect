@@ -96,7 +96,9 @@ export default function ProjectCard({ project }: { project: Project }) {
         </CardContent>
 
         <CardFooter className="p-4 gap-4">
-          <Button className="w-full" onClick={() => setIsDetailsOpen(true)}>View Details</Button>
+          <Button className="w-full" onClick={() => setIsDetailsOpen(true)}>
+            View Details
+          </Button>
           <Button className="w-full" variant={'outline'} onClick={() => setIsFormOpen(true)}>
             Apply
           </Button>

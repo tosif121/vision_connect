@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Briefcase } from 'lucide-react';
 import { useState } from 'react';
 import CreateProjectForm from './CreateProjectForm';
+import ProjectsList from './ProjectsList';
+import DeveloperProfiles from './DeveloperProfile';
 
 export default function Hero() {
   const userType = localStorage.getItem('userType');
@@ -36,7 +38,7 @@ export default function Hero() {
           </div>
         </div>
       </div>
-      
+      {(userType !== 'founder' && <ProjectsList />) || <DeveloperProfiles />}
     </>
   );
 }

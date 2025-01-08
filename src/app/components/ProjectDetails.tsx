@@ -1,15 +1,26 @@
 import React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Mail, Star, MapPin, Calendar, Users, Briefcase } from 'lucide-react';
+
+interface Founder {
+  avatar: string;
+  initials: string;
+  name: string;
+  location: string;
+}
+
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  equity: number;
+  skills: string;
+  status?: string;
+  founder?: Founder;
+}
 
 interface ProjectDetailsModalProps {
   project: Project;
@@ -18,12 +29,7 @@ interface ProjectDetailsModalProps {
   onApply: () => void;
 }
 
-export default function ProjectDetailsModal({ 
-  project, 
-  isOpen, 
-  setIsOpen,
-  onApply 
-}: ProjectDetailsModalProps) {
+export default function ProjectDetailsModal({ project, isOpen, setIsOpen, onApply }: ProjectDetailsModalProps) {
   const skills = project.skills
     .replace(/^"|"$/g, '')
     .split(',')
