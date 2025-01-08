@@ -1,14 +1,25 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Briefcase } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CreateProjectForm from './CreateProjectForm';
 import ProjectsList from './ProjectsList';
 import DeveloperProfiles from './DeveloperProfile';
 
 export default function Hero() {
-  const userType = localStorage.getItem('userType');
+  const [userType, setUserType] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  useEffect(() => {
+    // Access localStorage only after component mounts
+    const storedUserType = localStorage.getItem('userType');
+    setUserType(storedUserType);
+  }, []);
+
+  // Don't render content until we know the userType
+  if (userType === null) {
+    return null; // Or a loading spinner
+  }
 
   return (
     <>
@@ -21,7 +32,7 @@ export default function Hero() {
             <p className="text-xl mb-8 text-gray-600 dark:text-gray-300">
               Connect with tech enthusiasts and bring your ideas to life
             </p>
-            {(userType == 'founder' && (
+            {userType === 'founder' && (
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   size="lg"
@@ -33,12 +44,11 @@ export default function Hero() {
                   Post Your Idea
                 </Button>
               </div>
-            )) ||
-              ''}
+            )}
           </div>
         </div>
       </div>
-      {(userType !== 'founder' && <ProjectsList />) || <DeveloperProfiles />}
+      {userType !== 'founder' ? <ProjectsList /> : <DeveloperProfiles />}
     </>
   );
 }

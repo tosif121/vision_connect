@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { RedirectToSignIn, useAuth, useClerk, useUser } from '@clerk/nextjs';
@@ -19,7 +19,13 @@ export default function Navbar() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const userType = localStorage.getItem('userType');
+  const [userType, setUserType] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Access localStorage only after component mounts
+    const storedUserType = localStorage.getItem('userType');
+    setUserType(storedUserType);
+  }, []);
 
   const handleSignOut = async () => {
     await signOut();
@@ -60,7 +66,9 @@ export default function Navbar() {
               <Button variant="ghost" onClick={() => handleNavigate('/projects')}>
                 My Projects
               </Button>
-              {(userType == 'founder' && <Button onClick={() => setIsFormOpen(true)}>Post Idea</Button>) || ''}
+              {userType === 'founder' && (
+                <Button onClick={() => setIsFormOpen(true)}>Post Idea</Button>
+              )}
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
